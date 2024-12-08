@@ -1,0 +1,71 @@
+ 
+@page
+@model SistemaMultas.Pages.Agente.ComisionesModel
+@{
+    ViewData["Title"] = "Mis Comisiones";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Resumen de Comisiones</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Este Mes</h5>
+                                    <h3 class="text-primary">$@Model.ComisionMesActual.ToString("N2")</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Mes Anterior</h5>
+                                    <h3 class="text-secondary">$@Model.ComisionMesAnterior.ToString("N2")</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Últimas Multas Pagadas</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Concepto</th>
+                                    <th>Monto</th>
+                                    <th>Comisión</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var multa in Model.UltimasMultasPagadas)
+                                {
+                                    <tr>
+                                        <td>@multa.FechaRegistro.ToShortDateString()</td>
+                                        <td>@multa.Concepto?.Nombre</td>
+                                        <td>$@multa.Monto.ToString("N2")</td>
+                                        <td>$@((multa.Monto * 0.10m).ToString("N2"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

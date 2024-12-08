@@ -1,0 +1,31 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">Iniciar Sesión</h2>
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group mb-3">
+                        <label asp-for="LoginInput.Cedula" class="form-label"></label>
+                        <input asp-for="LoginInput.Cedula" class="form-control" />
+                        <span asp-validation-for="LoginInput.Cedula" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="LoginInput.Clave" class="form-label"></label>
+                        <input asp-for="LoginInput.Clave" class="form-control" type="password" />
+                        <span asp-validation-for="LoginInput.Clave" class="text-danger"></span>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

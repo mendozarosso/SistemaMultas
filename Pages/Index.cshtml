@@ -1,0 +1,37 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Sistema de Multas";
+}
+
+<div class="text-center">
+    <h1 class="display-4 mb-4">Sistema de Multas</h1>
+    
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Bienvenido, @User.Identity.Name</h5>
+                        <p class="card-text">Seleccione una opción del menú para comenzar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Acceso al Sistema</h5>
+                        <p class="card-text">Por favor, inicie sesión para acceder al sistema.</p>
+                        <a href="/Login" class="btn btn-primary">Iniciar Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

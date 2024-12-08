@@ -1,0 +1,106 @@
+@page
+@model SistemaMultas.Pages.Oficina.GestionAgentesModel
+@{
+    ViewData["Title"] = "Gestión de Agentes";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3>Gestión de Agentes</h3>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarAgenteModal">
+                Nuevo Agente
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cédula</th>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th>Multas Registradas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var agente in Model.Agentes)
+                        {
+                            <tr>
+                                <td>@agente.Cedula</td>
+                                <td>@agente.Nombre</td>
+                                <td>
+                                    <span class="badge bg-@(agente.Activo ? "success" : "danger")">
+                                        @(agente.Activo ? "Activo" : "Inactivo")
+                                    </span>
+                                </td>
+                                <td>@agente.TotalMultas</td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" 
+                                            onclick="editarAgente(@Json.Serialize(agente))">
+                                        Editar
+                                    </button>
+                                    <form method="post" style="display: inline;">
+                                        <input type="hidden" name="id" value="@agente.Id" />
+                                        <button type="submit" class="btn btn-sm @(agente.Activo ? "btn-danger" : "btn-success")"
+                                                asp-page-handler="@(agente.Activo ? "Desactivar" : "Activar")">
+                                            @(agente.Activo ? "Desactivar" : "Activar")
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar/Editar Agente -->
+<div class="modal fade" id="agregarAgenteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Nuevo Agente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="agenteId" name="Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Cédula</label>
+                        <input type="text" class="form-control" name="Cedula" required id="agenteCedula" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="Nombre" required id="agenteNombre" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Clave</label>
+                        <input type="password" class="form-control" name="Clave" required id="agenteClave" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function editarAgente(agente) {
+            document.getElementById('modalTitle').textContent = 'Editar Agente';
+            document.getElementById('agenteId').value = agente.id;
+            document.getElementById('agenteCedula').value = agente.cedula;
+            document.getElementById('agenteNombre').value = agente.nombre;
+            document.getElementById('agenteClave').value = '';
+            var modal = new bootstrap.Modal(document.getElementById('agregarAgenteModal'));
+            modal.show();
+        }
+    </script>
+}

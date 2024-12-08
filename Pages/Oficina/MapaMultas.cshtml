@@ -1,0 +1,83 @@
+@page
+@model SistemaMultas.Pages.Oficina.MapaMultasModel
+@{
+    ViewData["Title"] = "Mapa de Multas";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Mapa de Multas</h3>
+        </div>
+        <div class="card-body">
+            <form method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Mes</label>
+                        <select name="Mes" class="form-select" asp-for="Mes">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i">@(new DateTime(2000, i, 1).ToString("MMMM"))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Año</label>
+                        <select name="Anio" class="form-select" asp-for="Anio">
+                            @for (int i = DateTime.Now.Year; i >= 2024; i--)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary d-block">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+
+            <div id="map" style="height: 500px;" class="mb-3"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Inicializar el mapa
+        var map = L.map('map').setView([18.4861, -69.9312], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Agregar marcadores para cada multa
+        @foreach (var multa in Model.Multas)
+        {
+            <text>
+            L.marker([@multa.Latitud, @multa.Longitud])
+                .bindPopup(`
+                    <strong>Ciudadano:</strong> @multa.NombreCiudadano<br>
+                    <strong>Concepto:</strong> @multa.Concepto?.Nombre<br>
+                    <strong>Monto:</strong> $@multa.Monto.ToString("N2")<br>
+                    <strong>Estado:</strong> @multa.Estado<br>
+                    <strong>Fecha:</strong> @multa.FechaRegistro.ToShortDateString()
+                `)
+                .addTo(map);
+            </text>
+        }
+
+        // Ajustar el mapa para mostrar todos los marcadores si hay multas
+        @if (Model.Multas.Any())
+        {
+            <text>
+            var bounds = L.latLngBounds([
+                @foreach (var multa in Model.Multas)
+                {
+                    @:[@multa.Latitud, @multa.Longitud],
+                }
+            ]);
+            map.fitBounds(bounds);
+            </text>
+        }
+    </script>
+}

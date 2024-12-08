@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sistema de Multas</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <!-- Leaflet JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+    <!-- Custom Styles Section -->
+    @RenderSection("Styles", required: false)
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #1b6ec2 !important;
+        }
+        .navbar .nav-link {
+            color: #555 !important;
+        }
+        .navbar .nav-link:hover {
+            color: #1b6ec2 !important;
+        }
+        footer {
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            text-align: center;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">Sistema de Multas</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/AcercaDe">Acerca de</a>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            @if (User.IsInRole("Agente"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page="/Agente/RegistrarMulta">Registrar Multa</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page="/Agente/ListadoMultas">Mis Multas</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Oficina"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page="/Oficina/GestionMultas">Gestionar Multas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page="/Oficina/Reportes">Reportes</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page="/Admin/Conceptos">Conceptos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page="/Admin/Usuarios">Usuarios</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <form method="post" asp-page="/Logout" class="d-flex">
+                            <button type="submit" class="btn btn-outline-primary">Cerrar Sesión</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <main role="main" class="pb-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="text-muted mt-auto">
+        <div class="container">
+            &copy; 2024 - Sistema de Multas. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

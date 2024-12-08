@@ -1,0 +1,102 @@
+ 
+@page
+@model SistemaMultas.Pages.Oficina.ReportesModel
+@{
+    ViewData["Title"] = "Reportes de Ingresos";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Reporte de Ingresos</h3>
+        </div>
+        <div class="card-body">
+            <form method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Mes</label>
+                        <select name="Mes" class="form-select" asp-for="Mes">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i">@(new DateTime(2000, i, 1).ToString("MMMM"))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Año</label>
+                        <select name="Anio" class="form-select" asp-for="Anio">
+                            @for (int i = DateTime.Now.Year; i >= 2024; i--)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary d-block">Generar</button>
+                    </div>
+                </div>
+            </form>
+
+            @if (Model.TotalIngresos > 0)
+            {
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Total Ingresos</h5>
+                                <h3>$@Model.TotalIngresos.ToString("N2")</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Total Multas</h5>
+                                <h3>@Model.TotalMultas</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Promedio por Multa</h5>
+                                <h3>$@Model.PromedioMulta.ToString("N2")</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-end">Total</th>
+                                <th class="text-end">Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detalle in Model.DetalleConceptos)
+                            {
+                                <tr>
+                                    <td>@detalle.Concepto</td>
+                                    <td class="text-center">@detalle.Cantidad</td>
+                                    <td class="text-end">$@detalle.Total.ToString("N2")</td>
+                                    <td class="text-end">$@detalle.Promedio.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No hay datos para mostrar en el período seleccionado.
+                </div>
+            }
+        </div>
+    </div>
+</div>

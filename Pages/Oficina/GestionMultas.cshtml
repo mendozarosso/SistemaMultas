@@ -1,0 +1,85 @@
+ 
+@page
+@model SistemaMultas.Pages.Oficina.GestionMultasModel
+@{
+    ViewData["Title"] = "Gestión de Multas";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Gestión de Multas</h3>
+        </div>
+        <div class="card-body">
+            <form method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" name="Busqueda" class="form-control" 
+                               placeholder="Buscar por cédula o nombre..." value="@Model.Busqueda">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="Estado" class="form-select" asp-for="Estado">
+                            <option value="">Todos los estados</option>
+                            <option value="Activa">Activas</option>
+                            <option value="Pagada">Pagadas</option>
+                            <option value="Perdonada">Perdonadas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Cedula</th>
+                            <th>Ciudadano</th>
+                            <th>Concepto</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var multa in Model.Multas)
+                        {
+                            <tr>
+                                <td>@multa.FechaRegistro.ToShortDateString()</td>
+                                <td>@multa.CedulaCiudadano</td>
+                                <td>@multa.NombreCiudadano</td>
+                                <td>@multa.Concepto?.Nombre</td>
+                                <td>$@multa.Monto.ToString("N2")</td>
+                                <td>
+                                    <span class="badge bg-@(multa.Estado == "Activa" ? "primary" : 
+                                          multa.Estado == "Pagada" ? "success" : "secondary")">
+                                        @multa.Estado
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (multa.Estado == "Activa")
+                                    {
+                                        <form method="post" style="display:inline">
+                                            <input type="hidden" name="MultaId" value="@multa.Id" />
+                                            <button type="submit" asp-page-handler="Pagar" 
+                                                    class="btn btn-success btn-sm">
+                                                Marcar Pagada
+                                            </button>
+                                            <button type="submit" asp-page-handler="Perdonar" 
+                                                    class="btn btn-secondary btn-sm">
+                                                Perdonar
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
